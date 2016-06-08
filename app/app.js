@@ -15,6 +15,10 @@ NotDolls.config(['$routeProvider',
 			templateUrl: 'partials/newFigurine.html',
 			controller: 'NewFigurineController'
 		})
+		.when('/register', {
+			templateUrl: 'partials/register.html',
+			controller: 'RegisterController'
+		})
 		.otherwise('/');
   }
 ]);
