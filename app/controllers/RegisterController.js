@@ -3,8 +3,9 @@
 NotDolls.controller('RegisterController', [
 	'$http', 
 	'$scope',
+	'AuthFactory',
 
-	function ($http, $scope) {
+	function ($http, $scope, authFactory) {
 
 		$scope.githubOauth = function () {
 			OAuth.initialize('pQOfs7xU3oz0aLT9ocjaVSLpTHY');
@@ -15,7 +16,7 @@ NotDolls.controller('RegisterController', [
 				result.me().done(function(data) {
 				    // do something with `data`, e.g. print data.name
 				    console.log(data);
-				    
+
 				    $http({
 				    	url: "http://localhost:5000/api/Geek",
 				    	method: "POST",
@@ -25,7 +26,31 @@ NotDolls.controller('RegisterController', [
 				    		emailAddress: data.email,
 				    		createdDate: new Date()
 				    	})
-				    });
+				    }).then(
+				    response => {
+				    	let theGeek = response.data[0];
+				    	authFactory.setUser(theGeek);
+				    	console.log("resolve fired", theGeek);
+				    },
+				    response => {
+				    	console.log("reject fired", response);
+
+				    	// Geek has already been created
+				    	if (response.status === 409) {
+				    		$http
+				    			.get(`http://localhost:5000/api/Geek?username=${data.alias}`)
+				    			.then(
+				    				response => {
+				    					let theGeek = response.data[0];
+				    					console.log("Found the Geek", theGeek);
+				    					authFactory.setUser(theGeek)
+				    				},
+				    				response => console.log("Could not find that Geek", response)
+				    			)
+				    	}
+
+				    }
+				    )
 				})
 			});
 		};

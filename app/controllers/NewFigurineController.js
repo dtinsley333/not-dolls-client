@@ -3,12 +3,11 @@
 NotDolls.controller('NewFigurineController', [
 	'$http', 
 	'$scope',
+	'AuthFactory',
 
-	function ($http, $scope) {
+	function ($http, $scope, authFactory) {
 
-		$scope.figurine = {
-			geekId: 3
-		};
+		$scope.figurine = {};
 
 		$scope.createFigurine = function () {
 			$scope.figurine.createdDate = new Date();
