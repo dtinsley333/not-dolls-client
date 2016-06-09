@@ -10,7 +10,18 @@ NotDolls.controller('MainController', [
 
 		$http
 			.get('http://localhost:5000/api/Inventory')
-			.success(inv => $scope.figurines = inv)
+			.success(inv => $scope.figurines = inv);
+
+		$scope.deleteToy = function (id) {
+			$http({
+				method: "DELETE",
+				url: `http://localhost:5000/api/Inventory/${id}`
+			})
+			.then(
+				() => console.log("Toy deleted"),
+				() => console.log("Toy not deleted")
+			);
+		}
 	}
 
 ]);
